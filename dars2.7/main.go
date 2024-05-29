@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	_ "github.com/lib/pq"
 )
@@ -37,30 +38,68 @@ func main() {
 		panic(err)
 	}
 
-	// user := User{}
-	// err = db.QueryRow(`select * from  user_car`).
-	// 	Scan(&user.ID, &user.Name, &user.Age, &user.Gender)
+	// INSERT
+	// _, err = db.Exec(`INSERT INTO customers (name, age) VALUES ($1, $2)`, "Alice", 30)
 	// if err != nil {
-	// 	panic(err)
+	// 	log.Fatal(err)
 	// }
-	//INSERT
-	// _, err = db.Exec("insert into user_car(id, name, age, gender) values ($1, $2, $4, $3)",
-	// 	uuid.NewString(), "Ibrohim", "m", 17)
+
+	// _, err = db.Exec(`INSERT INTO orders (customer_id, product, amount) VALUES ($1, $2, $3)`, 1, "Laptop", 1200.50)
 	// if err != nil {
-	// 	panic(err)
+	// 	log.Fatal(err)
 	// }
-	// UPDATE
-	// _, err = db.Exec("update user_car set name=$1  where  age=$2 ", "ali", 17)
+
+	// fmt.Println("Data inserted successfully!")
+
+	// // UPDATE
+	// _, err = db.Exec(`UPDATE customers SET age = $1 WHERE name = $2`, 31, "Alice")
 	// if err != nil {
-	// 	panic(err)
+	// 	log.Fatal(err)
 	// }
+
+	// fmt.Println("Data updated successfully!")
+
 	// DELETE
-	_, err = db.Exec("delete from user_car  where  age=$1 ",  17)
+	// _, err = db.Exec(`DELETE FROM customers WHERE name = $1`, "Alice")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// fmt.Println("Data deleted successfully!")
+
+	// Query
+	rows, err := db.Query(`SELECT customers.name, orders.product, orders.amount 
+	FROM customers 
+	JOIN orders ON customers.id = orders.customer_id 
+	WHERE customers.id = $1`, 1)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var name, product string
+		var amount float64
+		err := rows.Scan(&name, &product, &amount)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("Customer: %s, Product: %s, Amount: %.2f\n", name, product, amount)
+	}
+	if err = rows.Err(); err != nil {
+		log.Fatal(err)
 	}
 
-	fmt.Println(user)
+	// Jadval birlashmasi bilan QueryRow
+	// var product string
+	// var amount float64
+	// err = db.QueryRow(`SELECT orders.product, orders.amount 
+	// FROM customers 
+	// JOIN orders ON customers.id = orders.customer_id 
+	// WHERE customers.name = $1`, "Alice").Scan(&product, &amount)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	fmt.Println("Successfully connected!")
+	// fmt.Printf("Product: %s, Amount: %.2f\n", product, amount)
 }

@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/google/uuid"
+
 	_ "github.com/lib/pq"
 )
 
@@ -11,8 +11,8 @@ const (
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
-	dbname   = "go11"
-	password = "pass"
+	dbname   = "postgres"
+	password = "123"
 )
 
 type User struct {
@@ -20,7 +20,6 @@ type User struct {
 	Name   string
 	Age    int
 	Gender string
-	Course string
 }
 
 func main() {
@@ -38,20 +37,28 @@ func main() {
 		panic(err)
 	}
 
-	user := User{}
-	err = db.QueryRow(`select s.id, s.name, age, gender, c.name from student s
-    	left join course c on c.id = s.course_id offset 2`).
-		Scan(&user.ID, &user.Name, &user.Age, &user.Gender, &user.Course)
+	// user := User{}
+	// err = db.QueryRow(`select * from  user_car`).
+	// 	Scan(&user.ID, &user.Name, &user.Age, &user.Gender)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	//INSERT
+	// _, err = db.Exec("insert into user_car(id, name, age, gender) values ($1, $2, $4, $3)",
+	// 	uuid.NewString(), "Ibrohim", "m", 17)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// UPDATE
+	// _, err = db.Exec("update user_car set name=$1  where  age=$2 ", "ali", 17)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// DELETE
+	_, err = db.Exec("delete from user_car  where  age=$1 ",  17)
 	if err != nil {
 		panic(err)
 	}
-	//
-	_, err = db.Exec("insert into student(id, name, age, gender, course_id) values ($1, $2, $4, $3, $2)",
-		uuid.NewString(), "Ibrohim", "m", 17, "0a3164d4-1511-444a-8b58-e722474fbffb")
-	if err != nil {
-		panic(err)
-	}
-	db.Exec("update student set name=$1, age=$2 ", "", 34)
 
 	fmt.Println(user)
 

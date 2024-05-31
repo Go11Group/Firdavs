@@ -2,19 +2,21 @@ package main
 
 import (
 	"fmt"
-	"n11/Firdavs/dars2.8/storage/postgres"
 	"n11/Firdavs/dars2.9/model"
+	"n11/Firdavs/dars2.9/storage/postgres"
 
 	_ "gorm.io/driver/postgres"
 )
 
 func main() {
-	db, err := postgres.ConnectDB
+	db, err := postgres.ConnectDB()
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
+
 	db.AutoMigrate(&model.Users{})
+
+	
 
 	//db.Create(&Product{Code: "D43", Price: 1654})
 	//db.Create(&Product{Code: "D45433", Price: 56})

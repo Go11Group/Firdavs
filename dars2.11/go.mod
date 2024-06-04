@@ -1,6 +1,6 @@
-module github.com/Go11Group/at_lesson/lesson31
+module n11/Firdavs/dars2.11
 
-go 1.22.3
+go 1.22.2
 
 require (
 	github.com/go-faker/faker/v4 v4.4.1
@@ -8,4 +8,4 @@ require (
 	github.com/lib/pq v1.10.9
 )
 
-require golang.org/x/text v0.15.0 // indirect
+require golang.org/x/text v0.14.0 // indirect

@@ -8,38 +8,36 @@ import (
 )
 
 func main() {
-	// Connect to the server.
 	conn, err := net.Dial("tcp", "localhost:8080")
 	if err != nil {
 		fmt.Println("Error connecting to server:", err)
 		return
 	}
 	defer conn.Close()
+	fmt.Println("Connected to server")
+
+	go readMessages(conn)
 
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		// Read input from the console.
 		fmt.Print("Enter message: ")
-		input, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Println("Error reading input:", err)
-			return
-		}
-
-		// Send input to the server.
-		_, err = conn.Write([]byte(input))
+		message, _ := reader.ReadString('\n')
+		_, err := conn.Write([]byte(message))
 		if err != nil {
 			fmt.Println("Error sending message:", err)
 			return
 		}
+	}
+}
 
-		// Receive response from the server.
-		response, err := bufio.NewReader(conn).ReadString('\n')
+func readMessages(conn net.Conn) {
+	reader := bufio.NewReader(conn)
+	for {
+		message, err := reader.ReadString('\n')
 		if err != nil {
-			fmt.Println("Error reading response:", err)
+			fmt.Println("Error reading message:", err)
 			return
 		}
-
-		fmt.Print("Server response: ", response)
+		fmt.Print("Message from server: " + message)
 	}
 }

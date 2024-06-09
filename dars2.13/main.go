@@ -1,79 +1,88 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"strconv"
 )
 
 func main() {
+	mux := http.NewServeMux()
+	//http://localhost:8080/send-url?name=Ali&age=15
+	mux.HandleFunc("/send-url", sendURL)
 
-	http.HandleFunc("GET /hello", hello)
-	http.HandleFunc("GET /hi", hi)
-	http.HandleFunc("GET /go", goland)
-	http.HandleFunc("GET /python", python)
+	mux.HandleFunc("/send-body", sendBody)
+	//http://localhost:8080/send-param?name=Khan&age=25
+	mux.HandleFunc("/send-param", sendParam)
+	mux.HandleFunc("/get-url", getURL)
+	mux.HandleFunc("/get-body", getBody)
+	mux.HandleFunc("/get-param", getParam)
 
-}
-
-
-
-
-func hello(w http.ResponseWriter, r *http.Request) {
-	//if r.Method != http.MethodGet {
-	//	w.Write([]byte("This method is not GET"))
-	//	return
-	//}
-	fmt.Println(r.URL)
-	fmt.Println(r.Host)
-	fmt.Println(r.Method)
-
-	n, err := w.Write([]byte("OZOOOOOD ......"))
+	err := http.ListenAndServe(":8080", mux)
 	if err != nil {
-		fmt.Println(err, n)
+		fmt.Println(err)
 	}
 }
 
-
-func hi(w http.ResponseWriter, r *http.Request) {
-	//if r.Method != http.MethodGet {
-	//	w.Write([]byte("This method is not GET"))
-	//	return
-	//}
-	fmt.Println(r.URL)
-	fmt.Println(r.Host)
-	fmt.Println(r.Method)
-
-	n, err := w.Write([]byte("Hi good night"))
-	if err != nil {
-		fmt.Println(err, n)
-	}
+// Handler for sending information via URL
+func sendURL(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	age := r.URL.Query().Get("age")
+	fmt.Fprintf(w, "Received via URL - Name: %s, Age: %s", name, age)
 }
 
-func goland(w http.ResponseWriter, r *http.Request) {
-	//if r.Method != http.MethodGet {
-	//	w.Write([]byte("This method is not GET"))
-	//	return
-	//}
-	fmt.Println(r.URL)
-	fmt.Println(r.Host)
-	fmt.Println(r.Method)
-
-	n, err := w.Write([]byte("Welcome to goland"))
+// Handler for sending information via Body
+func sendBody(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		fmt.Println(err, n)
+		http.Error(w, "Unable to read request body", http.StatusBadRequest)
+		return
 	}
+	fmt.Fprintf(w, "Received via Body - Data: %s", string(body))
 }
 
-func python(w http.ResponseWriter, r *http.Request) {
-	//if r.Method != http.MethodGet {
-	//	w.Write([]byte("This method is not GET"))
-	//	return
-	//}
-	fmt.Println(r.URL)
-	fmt.Println(r.Host)
-	fmt.Println(r.Method)
+// Handler for sending information via URL parameters
+func sendParam(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	age := r.URL.Query().Get("age")
+	fmt.Fprintf(w, "Received via URL Params - Name: %s, Age: %s", name, age)
+}
 
-	n, err := w.Write([]byte("Welcome to pythone"))
-	if err != nil {
-		fmt.Println(err, n)
+// Handler for reading information from URL
+func getURL(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	name := query.Get("name")
+	age := query.Get("age")
+	if name == "" {
+		name = "unknown"
 	}
+	ageInt, err := strconv.Atoi(age)
+	if err != nil {
+		ageInt = 0
+	}
+	fmt.Fprintf(w, "Received from URL - Name: %s, Age: %d", name, ageInt)
+}
+
+// Handler for reading information from Body
+func getBody(w http.ResponseWriter, r *http.Request) {
+	type RequestBody struct {
+		Name string `json:"name"`
+		Age  int    `json:"age"`
+	}
+	var body RequestBody
+	err := json.NewDecoder(r.Body).Decode(&body)
+	if err != nil {
+		http.Error(w, "Unable to parse JSON request", http.StatusBadRequest)
+		return
+	}
+	fmt.Fprintf(w, "Received from Body - Name: %s, Age: %d", body.Name, body.Age)
+}
+
+// Handler for reading information from URL parameters
+func getParam(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	age := r.URL.Query().Get("age")
+	fmt.Fprintf(w, "Received from URL Params - Name: %s, Age: %s", name, age)
 }

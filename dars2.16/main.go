@@ -16,6 +16,7 @@ func main() {
 		fmt.Println("oh no")
 	}
 	time.Sleep(2*time.Second)
+	context.WithoutCancel()
 }
 
 func myfunc(ctx context.Context)  {
@@ -30,3 +31,4 @@ func myfunc(ctx context.Context)  {
 		time.Sleep(500*time.Millisecond)
 	}
 }
+

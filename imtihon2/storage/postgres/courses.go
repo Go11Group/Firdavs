@@ -27,28 +27,6 @@ func (u *Courses) CreateCurse(course *model.Courses) error {
 	return nil
 }
 
-//TODO to'g'irlanadi
-// func (u *Courses) GetCourseBycourse(userId string) (string, []model.Courses, error) {
-// 	var courses string
-// 	err := u.db.QueryRow("select course_id from enrollments where course_id = $1", userId).Scan(&courses)
-// 	if err != nil {
-// 		return "", nil, err
-// 	}
-// 	rows, err := u.db.Query("select id,title,description from  courses where id=$1", &courses)
-// 	if err != nil {
-// 		return "", nil, err
-// 	}
-// 	courses := []model.Courses{}
-// 	for rows.Next() {
-// 		cour := model.Courses{}
-// 		err := rows.Scan(&cour.Course_id, &cour.Title, &cour.Description)
-// 		if err != nil {
-// 			return "", nil, err
-// 		}
-// 		courses = append(courses, cour)
-// 	}
-// 	return userId, courses, nil
-// }
 
 func (u *Courses) ReadCourse(id string) (*model.Courses, error) {
 	row := u.db.QueryRow("select * from courses where course_id = $1", id)
@@ -73,7 +51,7 @@ func (u *Courses) UpdateCourse(course *model.Courses) error {
 	return nil
 }
 
-func (u *Courses) DeleteUser(id string) error {
+func (u *Courses) DeleteCourse(id string) error {
 	_, err := u.db.Exec("delete from courses where course_id = $1", id)
 	if err != nil {
 		return err
@@ -81,7 +59,7 @@ func (u *Courses) DeleteUser(id string) error {
 	return nil
 }
 
-func (u *Courses) ReadAllUsers() ([]*model.Courses, error) {
+func (u *Courses) ReadAllCourses() ([]*model.Courses, error) {
 	rows, err := u.db.Query("select * from courses")
 	if err != nil {
 		return nil, err

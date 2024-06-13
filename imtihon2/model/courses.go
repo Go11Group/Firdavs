@@ -10,3 +10,9 @@ type Courses struct {
 	UpdateAt    time.Time `json:"update_at"`
 	DeleteAt    int       `json:"delete_at"`
 }
+
+type FeltirCourses struct {
+	Course_id   string
+	Title       string
+	Description string
+}

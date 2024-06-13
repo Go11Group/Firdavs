@@ -20,15 +20,7 @@ func (hand *Handler) CreateUser(g *gin.Context) {
   }
   g.JSON(http.StatusCreated, user)
 }
-// TODO
-// func (hand *Handler) GetCourseByUsers(g *gin.Context) {
-//   userId, course, err := hand.User.GetCourseByUser(g.Param("id"))
-//   if err != nil {
-//     g.String(http.StatusInternalServerError, err.Error())
-//   }
-//   g.JSON(http.StatusOK,userId, course)
 
-// }
 
 func (hand *Handler) UpdateUser(g *gin.Context) {
   var user model.User

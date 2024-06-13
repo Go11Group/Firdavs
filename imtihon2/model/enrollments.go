@@ -11,3 +11,10 @@ type Enrollments struct {
 	UpdateAt       time.Time `json:"update_at`
 	DeleteAt       int       `json:"delete_at`
 }
+
+type FeltirEnrollments struct {
+	EnrollmentId   string
+	UserId         string
+	CourseId       string
+	EnrollmentDate string
+}

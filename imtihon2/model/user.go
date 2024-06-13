@@ -12,3 +12,11 @@ type User struct {
 	UpdateAt  time.Time `json:"update_at"`
 	DeleteAt  int       `json:"dalete_at"`
 }
+
+type FilterUsers struct {
+	Id       string
+	Name     string
+	Email    string
+	Birthday string
+	Password string
+}

@@ -36,27 +36,7 @@ func (u *User) CreateUser(user *model.User) error {
 	return nil
 }
 
-func (u *User) GetCourseByUser(userId string) (string, []model.Courses, error) {
-	var courses string
-	err := u.db.QueryRow("select course_id from enrollments where user_id = $1", userId).Scan(&courses)
-	if err != nil {
-		return "", nil, err
-	}
-	rows, err := u.db.Query("select id,title,description from  courses where id=$1", &courses)
-	if err != nil {
-		return "", nil, err
-	}
-	course := []model.Courses{}
-	for rows.Next() {
-		cour := model.Courses{}
-		err := rows.Scan(&cour.Course_id, &cour.Title, &cour.Description)
-		if err != nil {
-			return "", nil, err
-		}
-		course = append(course, cour)
-	}
-	return userId, course, nil
-}
+
 
 func (u *User) ReadUser(id string) (*model.User, error) {
 	row := u.db.QueryRow("select * from users where user_id = $1", id)
@@ -78,8 +58,9 @@ func (u *User) UpdateUser(user *model.User) error {
 		return errors.New("failed to parse birthday")
 	}
 	_, err = u.db.Exec("update users set name = $1, email = $2, birthday = $3, password = $4 where user_id = $5",
-		user.Name, user.Email, birthday, user.Password, user.Id)
+		&user.Name, &user.Email, &birthday, &user.Password, &user.Id)
 	if err != nil {
+		fmt.Println("80", err)
 		return err
 	}
 	return nil

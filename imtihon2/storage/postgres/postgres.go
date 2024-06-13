@@ -1,21 +1,20 @@
-package storage
+package postgres
 
 import (
 	"database/sql"
 	"fmt"
-
-	_ "github.com/lib/pq"
+	_"github.com/lib/pq"
 )
 
 const (
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
-	dbname   = "postgres"
+	dbname   = "imtihon_2"
 	password = "123"
 )
 
-func Connect() (*sql.DB, error) {
+func ConnectDB() (*sql.DB, error){
 	conn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
 		host, port, user, dbname, password)
 	db, err := sql.Open("postgres", conn)

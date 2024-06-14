@@ -12,14 +12,15 @@ type Lesson struct {
 	db *sql.DB
 }
 
+// NewLesson funktsiyasi yangi Lesson obyekti qaytaradi.
 func NewLesson(db *sql.DB) *Lesson {
 	return &Lesson{db}
 }
 
+// CreateLesson funktsiyasi yangi dars qo'shish uchun.
 func (u *Lesson) CreateLesson(lesson *model.Lessons) error {
-
 	lesson.LessonId = uuid.NewString()
-	_, err := u.db.Exec("insert into lessons (lesson_id, course_id, title, content) VALUES ($1,$2,$3,$4)",
+	_, err := u.db.Exec("insert into lessons (lesson_id, course_id, title, content) VALUES ($1, $2, $3, $4)",
 		lesson.LessonId, lesson.CourseId, lesson.Title, lesson.Content)
 	if err != nil {
 		return err
@@ -27,10 +28,9 @@ func (u *Lesson) CreateLesson(lesson *model.Lessons) error {
 	return nil
 }
 
-
-
+// ReadLesson funktsiyasi berilgan dars ID si bo'yicha ma'lumotni olish uchun.
 func (u *Lesson) ReadLesson(id string) (*model.Lessons, error) {
-	row := u.db.QueryRow("select * from courses where lessons = $1", id)
+	row := u.db.QueryRow("select * from lessons where lesson_id = $1", id)
 
 	fmt.Println(id)
 	var lesson model.Lessons
@@ -43,8 +43,9 @@ func (u *Lesson) ReadLesson(id string) (*model.Lessons, error) {
 	return &lesson, nil
 }
 
+// UpdateLesson funktsiyasi darsni yangilash uchun.
 func (u *Lesson) UpdateLesson(lesson *model.Lessons) error {
-	_, err := u.db.Exec("update lessons set course_id = $1, title = $2, content = $2 where lesson_id = $4",
+	_, err := u.db.Exec("update lessons set course_id = $1, title = $2, content = $3 where lesson_id = $4",
 		lesson.CourseId, lesson.Title, lesson.Content, lesson.LessonId)
 	if err != nil {
 		return err
@@ -52,6 +53,7 @@ func (u *Lesson) UpdateLesson(lesson *model.Lessons) error {
 	return nil
 }
 
+// DeleteLesson funktsiyasi darsni o'chirish uchun.
 func (u *Lesson) DeleteLesson(id string) error {
 	_, err := u.db.Exec("delete from lessons where lesson_id = $1", id)
 	if err != nil {
@@ -60,12 +62,14 @@ func (u *Lesson) DeleteLesson(id string) error {
 	return nil
 }
 
+// GetAllLessons funktsiyasi barcha darslarni olish uchun.
 func (u *Lesson) GetAllLessons() ([]*model.Lessons, error) {
 	rows, err := u.db.Query("select * from lessons")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
+
 	var lessons []*model.Lessons
 	for rows.Next() {
 		var lesson model.Lessons
@@ -79,20 +83,20 @@ func (u *Lesson) GetAllLessons() ([]*model.Lessons, error) {
 	return lessons, nil
 }
 
+// FilterLessons funktsiyasi darslarni filtrlash uchun.
 func (u *Lesson) FilterLessons(f model.FeltirLessons) ([]model.Lessons, error) {
 	var (
 		params = make(map[string]interface{})
 		arr    []interface{}
 	)
-	query := `select lesson_id, curse_id, title, content
-  from lessons `
+	query := `select lesson_id, course_id, title, content
+	from lessons `
 	filter := ` where true`
 
 	if len(f.LessonId) > 0 {
 		params["lesson_id"] = f.LessonId
 		filter += " and lesson_id = :lesson_id "
 	}
-
 
 	if len(f.CourseId) > 0 {
 		params["course_id"] = f.CourseId
@@ -101,15 +105,13 @@ func (u *Lesson) FilterLessons(f model.FeltirLessons) ([]model.Lessons, error) {
 
 	if len(f.Title) > 0 {
 		params["title"] = f.Title
-		filter += "and title = :title "
+		filter += " and title = :title "
 	}
 
 	if len(f.Content) > 0 {
 		params["content"] = f.Content
-		filter += "and content = :content "
+		filter += " and content = :content "
 	}
-
-
 
 	query = query + filter
 
@@ -127,7 +129,6 @@ func (u *Lesson) FilterLessons(f model.FeltirLessons) ([]model.Lessons, error) {
 		if err != nil {
 			return nil, err
 		}
-
 		lessons = append(lessons, lesson)
 	}
 	return lessons, nil

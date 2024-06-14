@@ -6,17 +6,21 @@ import (
 )
 
 func main() {
+	// Bazaga ulanish
 	db, err := postgres.ConnectDB()
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
 
-	user := postgres.NewUser(db)
-	courses := postgres.NewCourses(db)
-	lesson := postgres.NewLesson(db)
-	enrollments := postgres.NewEnrollments(db)
+	// Repozitoriyalarni boshlash
+	userRepo := postgres.NewUser(db)
+	coursesRepo := postgres.NewCourses(db)
+	lessonRepo := postgres.NewLesson(db)
+	enrollmentsRepo := postgres.NewEnrollments(db)
+	fivetaskRepo := postgres.NewFivetask(db)
 
-	l := handler.GIN(db, user, courses, lesson, enrollments)
-	l.Run("localhost:8080")
+	// GIN xandlerni ishlatib serverni boshlash
+	server := handler.GIN(db, userRepo, coursesRepo, lessonRepo, enrollmentsRepo, fivetaskRepo)
+	server.Run("localhost:8080")
 }

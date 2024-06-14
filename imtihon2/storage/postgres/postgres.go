@@ -29,8 +29,7 @@ func ConnectDB() (*sql.DB, error) {
 		return nil, err
 	}
 
-	// PostgreSQL ga bog'lanish yopildi
-	defer db.Close()
+	
 
 	// Bog'lanishni sinovlaydi
 	err = db.Ping()

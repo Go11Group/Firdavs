@@ -18,7 +18,7 @@ func GIN(db *sql.DB, user *postgres.User, course *postgres.Courses, lesson *post
 	r.GET("/user/:user_id", handler.GetUserById)    // ID bo'yicha foydalanuvchini olish
 	r.GET("/userfilter", handler.GetFilterUsers)    // Foydalanuvchilarni filtr bo'yicha olish
 	r.POST("/user", handler.CreateUser)             // Yangi foydalanuvchi yaratish
-	r.PUT("/user", handler.UpdateUser)              // Foydalanuvchini yangilash
+	r.PUT("/user/:user_id", handler.UpdateUser)     // Foydalanuvchini yangilash
 	r.DELETE("/user/:user_id", handler.DeleteUsers) // ID bo'yicha foydalanuvchini o'chirish
 
 	// Courses endpoints

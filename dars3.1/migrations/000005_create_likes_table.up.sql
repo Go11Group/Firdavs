@@ -1,7 +1,6 @@
-CREATE TABLE comments (
+CREATE TABLE likes (
     id SERIAL PRIMARY KEY,
-    post_id INT REFERENCES posts(id),
     user_id INT REFERENCES users(id),
-    content TEXT NOT NULL,
+    post_id INT REFERENCES posts(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

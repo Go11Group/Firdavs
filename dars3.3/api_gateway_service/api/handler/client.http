@@ -1,0 +1,7 @@
+POST http://localhost:8081/station/create
+Content-Type: application/json
+
+{"Name" : "Mirzo Ulug'bek"}
+
+
+###

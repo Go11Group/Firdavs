@@ -5,14 +5,14 @@ option go_package = "genproto/generator/";
 package protos;
 
 service Generator {
-  rpc RandomPicker(Request) returns (Response) {}
-}
-
-message Request {
-
-  repeated string names = 1;
-}
-
-message Response {
-  repeated string result = 1;
-}
+    rpc FindSurname(Request) returns (Response) {}
+  }
+  
+  message Request {
+    map<string, string> all = 1;
+    string names = 2;
+  }
+  
+  message Response {
+    map<string, string> result = 1;
+  }

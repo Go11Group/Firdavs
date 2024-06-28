@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	Generator_RandomPicker_FullMethodName = "/protos.Generator/RandomPicker"
+	Generator_FindSurname_FullMethodName = "/protos.Generator/FindSurname"
 )
 
 // GeneratorClient is the client API for Generator service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GeneratorClient interface {
-	RandomPicker(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+	FindSurname(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 }
 
 type generatorClient struct {
@@ -37,10 +37,10 @@ func NewGeneratorClient(cc grpc.ClientConnInterface) GeneratorClient {
 	return &generatorClient{cc}
 }
 
-func (c *generatorClient) RandomPicker(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
+func (c *generatorClient) FindSurname(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Response)
-	err := c.cc.Invoke(ctx, Generator_RandomPicker_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Generator_FindSurname_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *generatorClient) RandomPicker(ctx context.Context, in *Request, opts ..
 // All implementations must embed UnimplementedGeneratorServer
 // for forward compatibility
 type GeneratorServer interface {
-	RandomPicker(context.Context, *Request) (*Response, error)
+	FindSurname(context.Context, *Request) (*Response, error)
 	mustEmbedUnimplementedGeneratorServer()
 }
 
@@ -59,8 +59,8 @@ type GeneratorServer interface {
 type UnimplementedGeneratorServer struct {
 }
 
-func (UnimplementedGeneratorServer) RandomPicker(context.Context, *Request) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RandomPicker not implemented")
+func (UnimplementedGeneratorServer) FindSurname(context.Context, *Request) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindSurname not implemented")
 }
 func (UnimplementedGeneratorServer) mustEmbedUnimplementedGeneratorServer() {}
 
@@ -75,20 +75,20 @@ func RegisterGeneratorServer(s grpc.ServiceRegistrar, srv GeneratorServer) {
 	s.RegisterService(&Generator_ServiceDesc, srv)
 }
 
-func _Generator_RandomPicker_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Generator_FindSurname_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GeneratorServer).RandomPicker(ctx, in)
+		return srv.(GeneratorServer).FindSurname(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Generator_RandomPicker_FullMethodName,
+		FullMethod: Generator_FindSurname_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GeneratorServer).RandomPicker(ctx, req.(*Request))
+		return srv.(GeneratorServer).FindSurname(ctx, req.(*Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -101,8 +101,8 @@ var Generator_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*GeneratorServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "RandomPicker",
-			Handler:    _Generator_RandomPicker_Handler,
+			MethodName: "FindSurname",
+			Handler:    _Generator_FindSurname_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

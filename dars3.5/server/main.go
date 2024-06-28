@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	pb "n11/Firdavs/dars3.5/genproto/generator"
 	"net"
+	pb "n11/Firdavs/dars3.5/genproto/generator"
 
 	"google.golang.org/grpc"
 )
@@ -11,8 +11,15 @@ import (
 type server struct {
 	pb.UnimplementedGeneratorServer
 }
-func (s *server) RandomPicker(ctx context.Context, in *pb.Response)(*pb)  {
-	
+
+func (s *server) FindSurname(ctx context.Context, in *pb.Request) (*pb.Response, error) {
+	for i, v := range in.All {
+		if in.Names == i {
+			new := &pb.Response{Result: map[string]string{i: v}}
+			return new, nil
+		}
+	}
+	return nil, nil
 }
 
 func main() {
@@ -23,7 +30,6 @@ func main() {
 	s := server{}
 	grpc := grpc.NewServer()
 	pb.RegisterGeneratorServer(grpc, &s)
-
 	err = grpc.Serve(listener)
 	if err != nil {
 		panic(err)

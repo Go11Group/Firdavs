@@ -4,33 +4,10 @@ import (
 	"context"
 	"fmt"
 	pb "n11/Firdavs/dars3.5/genproto/generator"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
-
-var names = []string{
-	"Abbos Qambarov",
-	"Azizbek Qobulov",
-	"Bekzod Qo'chqarov",
-	"Diyorbek Nematov Dadajon o'g'li",
-	"Faxriddin Raximberdiyev Farxodjon o'g'li",
-	"Fazliddin Xayrullayev",
-	"Hamidjon Nuriddinov",
-	"Hamidulloh Hamidullayev",
-	"Ibrohim Umarov Fazliddin o'g'li",
-	"Jamshidbek Hatamov Erkin o'g'li",
-	"Javohir Abdusamatov",
-	"Muhammadaziz Yoqubov",
-	"Muhammadjon Ko'palov",
-	"Nurmuhammad",
-	"Ozodjon A'zamjonov",
-	"Sanjarbek Abduraxmonov",
-	"Yusupov Bobur",
-	"Firdavs",
-	"Ozodbek",
-	"Abdulaziz Xoliqulov",
-	"Intizor opa",
-}
 
 func main() {
 	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -39,15 +16,19 @@ func main() {
 	}
 	defer conn.Close()
 	gen := pb.NewGeneratorClient(conn)
+	var names string
+	fmt.Scan(&names)
 	req := &pb.Request{
-		Names:     names,
+		All:   map[string]string{"Nurmuhammad": "Meliqo'ziyev", "Faxriddin": "Rahimberdiyev"},
+		Names: names,
 	}
-	resp, err := gen.RandomPicker(context.Background(), req)
+	resp, err := gen.FindSurname(context.Background(), req)
+
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("Seat - Name")
 	for k, v := range resp.Result {
-		fmt.Printf("%2d   - %s\n", v, k)
+		fmt.Printf("%s   - %s\n", v, k)
 	}
 }

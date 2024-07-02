@@ -1,6 +1,6 @@
-module n11/Firdavs/dars3.5
+module new
 
-go 1.22.2
+go 1.22.1
 
 require (
 	google.golang.org/grpc v1.64.0

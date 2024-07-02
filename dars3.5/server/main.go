@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"net"
-	pb "n11/Firdavs/dars3.5/genproto/generator"
+	pb "new/genproto/generator"
 
 	"google.golang.org/grpc"
 )
